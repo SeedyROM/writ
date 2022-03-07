@@ -2,7 +2,7 @@ use core::fmt::Debug;
 use sha1::{Digest, Sha1};
 use std::{fs, path::PathBuf};
 
-use crate::Hash;
+use crate::hash::Hash;
 
 pub struct Blob {
     hash: Hash,
@@ -16,6 +16,7 @@ impl Blob {
     }
 
     #[allow(dead_code)]
+    #[no_coverage]
     pub fn data(&self) -> &Vec<u8> {
         &self.data
     }
@@ -53,6 +54,7 @@ impl From<PathBuf> for Blob {
     }
 }
 
+#[no_coverage]
 impl Debug for Blob {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Blob")
@@ -97,6 +99,11 @@ mod tests {
         let blob0 = Blob::from(TEST_FILE_PATH.to_string());
         let blob1 = Blob::from(OTHER_TEST_FILE_PATH.to_string());
 
+        assert_ne!(blob0.data().len(), blob1.data().len());
         assert_ne!(blob0, blob1);
+        assert_eq!(
+            blob0,
+            "e2a667251544b4fd487e813cc030c661433a936a".to_string()
+        );
     }
 }
